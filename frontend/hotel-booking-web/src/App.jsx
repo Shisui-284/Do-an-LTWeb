@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
+import TouristHome from './pages/Tourist/TouristHome';
 
 // Khởi tạo nhanh trang giới thiệu đơn giản
 const About = () => (
@@ -31,6 +32,10 @@ function App() {
       </Routes>
     </BrowserRouter>
   );
+
+  
+
+<Route path="/" element={<TouristHome />} />
 }
 
 export default App;

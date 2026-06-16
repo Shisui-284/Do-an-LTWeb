@@ -8,6 +8,8 @@ namespace HotelBookingAPI.Models
         [Key]
         public int Id { get; set; }
 
+        public int? UserId { get; set; }
+
         // --- Thông tin Đặt phòng nhanh (Không bắt buộc phải có tài khoản User) ---
         [Required, StringLength(100)]
         public string GuestName { get; set; } 
@@ -18,7 +20,7 @@ namespace HotelBookingAPI.Models
         // --- Thông tin Phòng đặt ---
         public int RoomTypeId { get; set; }
         [ForeignKey("RoomTypeId")]
-        public RoomType RoomType { get; set; }
+        public RoomType? RoomType { get; set; }
 
         [Required]
         public int RoomQuantity { get; set; } // Số lượng phòng

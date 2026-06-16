@@ -484,3 +484,5 @@ C:\Users\adminn\Documents\Do-an-LTWeb\HotelBookingAPI\obj\Debug\net10.0\refint\H
 C:\Users\adminn\Documents\Do-an-LTWeb\HotelBookingAPI\obj\Debug\net10.0\HotelBookingAPI.pdb
 C:\Users\adminn\Documents\Do-an-LTWeb\HotelBookingAPI\obj\Debug\net10.0\HotelBookingAPI.genruntimeconfig.cache
 C:\Users\adminn\Documents\Do-an-LTWeb\HotelBookingAPI\obj\Debug\net10.0\ref\HotelBookingAPI.dll
+F:\Đồ án LTWeb\HotelBookingAPI\bin\Debug\net10.0\BCrypt-Net-Next.dll
+F:\Đồ án LTWeb\HotelBookingAPI\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

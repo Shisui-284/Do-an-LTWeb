@@ -23,6 +23,16 @@ namespace HotelBookingAPI.Controllers
             return await _context.Hotels.ToListAsync();
         }
 
+        // Lấy danh sách khách sạn theo ManagerId
+        [HttpGet("manager/{managerId}")]
+        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotelsByManager(int managerId)
+        {
+            var hotels = await _context.Hotels
+                .Where(h => h.ManagerId == managerId)
+                .ToListAsync();
+            return Ok(hotels);
+        }
+
         // API 1.5: Lấy chi tiết 1 khách sạn theo ID (Dành cho trang Chi tiết khách sạn)
         [HttpGet("{id}")]
         public async Task<ActionResult<Hotel>> GetHotelById(int id)
@@ -153,6 +163,10 @@ namespace HotelBookingAPI.Controllers
             existingHotel.City = hotelRequest.City;
             existingHotel.Address = hotelRequest.Address;
             existingHotel.Description = hotelRequest.Description;
+            // Also update manager if provided
+            if (hotelRequest.ManagerId.HasValue) {
+                existingHotel.ManagerId = hotelRequest.ManagerId;
+            }
 
             await _context.SaveChangesAsync();
 

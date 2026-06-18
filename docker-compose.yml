@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  # 1. Container Backend (ASP.NET Core)
+  backend:
+    build:
+      context: ./HotelBookingAPI
+      dockerfile: Dockerfile
+    ports:
+      - "5154:8080"
+    environment:
+      # Dùng host.docker.internal để Backend gọi ra SQL Server ở ngoài máy thật
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=HotelBookingDB;User Id=sa;Password=123;TrustServerCertificate=True;
+
+  # 2. Container Frontend (ReactJS)
+  frontend:
+    build:
+      context: ./frontend/hotel-booking-web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend

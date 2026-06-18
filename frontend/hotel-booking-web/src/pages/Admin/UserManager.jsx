@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function UserManager() {
   const [users, setUsers] = useState([]);
@@ -55,46 +56,103 @@ export default function UserManager() {
         role: newRole, 
         isActive: user.isActive 
       });
-      alert("Cập nhật quyền thành công!");
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công!',
+        text: 'Quyền đã được cập nhật.',
+        timer: 1500,
+        showConfirmButton: false
+      });
       fetchUsers();
     } catch (error) {
-      alert("Lỗi khi cập nhật quyền.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại!',
+        text: "Có lỗi xảy ra khi cập nhật quyền!",
+        confirmButtonColor: '#e74c3c'
+      });
     }
   };
 
   // Khóa hoặc mở khóa tài khoản (Fix lỗi payload)
-  const handleToggleActive = async (userId, currentStatus) => {
-    if (window.confirm(`Bạn có chắc muốn ${currentStatus ? 'khóa' : 'mở khóa'} tài khoản này?`)) {
-      try {
-        const user = users.find(u => u.id === userId);
-        // Chỉ gửi cấu trúc DTO gồm role và isActive lên Backend
-        await axios.put(`${API_BASE_URL}/Users/${userId}`, { 
-          role: user.role, 
-          isActive: !currentStatus 
-        });
-        alert("Cập nhật trạng thái tài khoản thành công!");
-        fetchUsers();
-      } catch (error) {
-        alert("Lỗi khi cập nhật trạng thái tài khoản.");
+  const handleToggleActive = (userId, currentStatus) => {
+    const actionText = currentStatus ? 'khóa' : 'mở khóa';
+    
+    // 1. Hiện Popup xác nhận bằng SweetAlert2 thay cho window.confirm
+    Swal.fire({
+      title: `Bạn có chắc muốn ${actionText} tài khoản này?`,
+      text: currentStatus ? "Người dùng sẽ không thể đăng nhập vào hệ thống!" : "Người dùng sẽ được cấp lại quyền truy cập.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: currentStatus ? '#e74c3c' : '#27ae60', // Đỏ nếu Khóa, Xanh nếu Mở khóa
+      cancelButtonColor: '#95a5a6',
+      confirmButtonText: `Xác nhận ${actionText}`,
+      cancelButtonText: 'Hủy'
+    }).then(async (result) => {
+      
+      // 2. Nếu người dùng bấm "Vâng..." thì mới gọi API
+      if (result.isConfirmed) {
+        try {
+          const user = users.find(u => u.id === userId);
+          // Chỉ gửi cấu trúc DTO gồm role và isActive lên Backend
+          await axios.put(`${API_BASE_URL}/Users/${userId}`, { 
+            role: user.role, 
+            isActive: !currentStatus 
+          });
+          
+          // 3. Thông báo thành công
+          Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: 'Trạng thái tài khoản đã được cập nhật.',
+            timer: 1500, // Tự động tắt sau 1.5 giây
+            showConfirmButton: false // Ẩn nút OK cho mượt
+          });
+          
+          fetchUsers(); // Tải lại danh sách
+          
+        } catch (error) {
+          // 4. Thông báo thất bại
+          Swal.fire({
+            icon: 'error',
+            title: 'Thất bại!',
+            text: "Có lỗi xảy ra khi cập nhật trạng thái tài khoản!",
+            confirmButtonColor: '#e74c3c'
+          });
+        }
       }
-    }
+    });
   };
 
   // Hàm thực hiện xóa hẳn tài khoản người dùng
   const handleDeleteUser = async (userId) => {
-    if (window.confirm("Hành động này không thể hoàn tác! Bạn có chắc chắn muốn XÓA HẲN tài khoản này ra khỏi hệ thống không?")) {
-      try {
-        await axios.delete(`${API_BASE_URL}/Users/${userId}`);
-        alert("Xóa tài khoản thành công!");
-        fetchUsers();
-      } catch (error) {
-        if (error.response && error.response.data && error.response.data.message) {
-          alert(error.response.data.message);
-        } else {
-          alert("Lỗi khi xóa người dùng.");
+    Swal.fire({
+      title: 'Bạn có chắc chắn?',
+      text: "Hành động này sẽ xóa vĩnh viễn dữ liệu và không thể hoàn tác!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e74c3c', // Màu đỏ cho nút Xóa
+      cancelButtonColor: '#95a5a6',  // Màu xám cho nút Hủy
+      confirmButtonText: 'Xác nhận xóa',
+      cancelButtonText: 'Hủy bỏ'
+    }).then(async (result) => {
+      // 2. Nếu người dùng bấm nút " Xóa "
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`${API_BASE_URL}/Users/${userId}`);
+
+          // Thông báo xóa thành công
+          Swal.fire('Đã xóa!', 'Dữ liệu đã được dọn sạch.', 'success');
+
+          // Gọi lại hàm tải danh sách
+          fetchUsers();
+          setSelectedUser(null);
+          setRooms([]);
+        } catch (error) {
+          Swal.fire('Lỗi!', 'Không thể xóa do dữ liệu đang bị ràng buộc.', 'error');
         }
       }
-    }
+    });
   };
 
   return (

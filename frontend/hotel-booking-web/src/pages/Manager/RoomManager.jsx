@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function RoomManager() {
   const { hotelId } = useParams();
@@ -70,10 +71,22 @@ export default function RoomManager() {
 
       if (isEditingType) {
         await axios.put(`${API_BASE_URL}/RoomTypes/${typeForm.id}`, payload);
-        alert("Cập nhật Loại phòng thành công!");
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành công!',
+          text: 'Dữ liệu đã được cập nhật.',
+          timer: 1500, // Tự động tắt sau 1.5 giầy
+          showConfirmButton: false // Ẩn nút OK cho mượt
+        });
       } else {
         await axios.post(`${API_BASE_URL}/RoomTypes`, payload);
-        alert("Thêm Loại phòng mới thành công!");
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành công!',
+          text: 'Loại phòng mới đã được thêm.',
+          timer: 1500,
+          showConfirmButton: false
+        });
       }
 
       setTypeForm({ id: null, name: "", price: "", bedType: "", roomView: "", hasBathtub: false, amenities: "", imageUrl: "", hotelId: Number(hotelId) });
@@ -83,22 +96,43 @@ export default function RoomManager() {
       setRooms([]);
     } catch (error) {
       console.error(error);
-      alert("Có lỗi xảy ra khi lưu Loại phòng!");
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi!',
+        text: 'Có lỗi xảy ra khi lưu Loại phòng!'
+      });
     }
   };
 
-  const handleDeleteType = async (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa loại phòng này không?")) {
-      try {
-        await axios.delete(`${API_BASE_URL}/RoomTypes/${id}`);
-        alert("Xóa loại phòng thành công!");
-        fetchRoomTypes();
-        setSelectedRoomType(null);
-        setRooms([]);
-      } catch (error) {
-        alert("Không thể xóa loại phòng này vì đang có phòng vật lý thuộc loại này.");
+  const handleDeleteType = (id) => {
+    // 1. Hiển thị Popup cảnh báo
+    Swal.fire({
+      title: 'Bạn có chắc chắn?',
+      text: "Hành động này sẽ xóa vĩnh viễn dữ liệu và không thể hoàn tác!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e74c3c', // Màu đỏ cho nút Xóa
+      cancelButtonColor: '#95a5a6',  // Màu xám cho nút Hủy
+      confirmButtonText: 'Vâng, Xóa đi!',
+      cancelButtonText: 'Hủy'
+    }).then(async (result) => {
+      // 2. Nếu người dùng bấm nút "Vâng, Xóa đi!"
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`${API_BASE_URL}/RoomTypes/${id}`);
+
+          // Thông báo xóa thành công
+          Swal.fire('Đã xóa!', 'Dữ liệu đã được dọn sạch.', 'success');
+
+          // Gọi lại hàm tải danh sách
+          fetchRoomTypes();
+          setSelectedRoomType(null);
+          setRooms([]);
+        } catch (error) {
+          Swal.fire('Lỗi!', 'Không thể xóa do dữ liệu đang bị ràng buộc.', 'error');
+        }
       }
-    }
+    });
   };
 
   // Xử lý Thêm/Sửa Phòng vật lý cụ thể (Ví dụ: 101, 102)
@@ -119,10 +153,22 @@ export default function RoomManager() {
 
       if (isEditingRoom) {
         await axios.put(`${API_BASE_URL}/Rooms/${roomForm.id}`, payload);
-        alert("Cập nhật phòng thành công!");
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành công!',
+          text: 'Thông tin phòng đã được cập nhật.',
+          timer: 1500,
+          showConfirmButton: false
+        });
       } else {
         await axios.post(`${API_BASE_URL}/Rooms`, payload);
-        alert("Thêm phòng vật lý thành công!");
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành công!',
+          text: 'Phòng vật lý mới đã được thêm.',
+          timer: 1500,
+          showConfirmButton: false
+        });
       }
 
       setRoomForm({ id: null, roomNumber: "", isMaintenance: false, isAvailable: true, roomTypeId: selectedRoomType.id });
@@ -130,7 +176,11 @@ export default function RoomManager() {
       fetchRooms(selectedRoomType.id);
     } catch (error) {
       console.error(error);
-      alert("Lỗi khi lưu thông tin phòng vật lý!");
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi!',
+        text: 'Có lỗi xảy ra khi lưu thông tin phòng vật lý.'
+      });
     }
   };
 
@@ -138,10 +188,20 @@ export default function RoomManager() {
     if (window.confirm("Bạn có chắc muốn xóa phòng này không?")) {
       try {
         await axios.delete(`${API_BASE_URL}/Rooms/${id}`);
-        alert("Xóa phòng thành công!");
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành công!',
+          text: 'Phòng đã được xóa.',
+          timer: 1500,
+          showConfirmButton: false
+        });
         fetchRooms(selectedRoomType.id);
       } catch (error) {
-        alert("Lỗi khi xóa phòng.");
+        Swal.fire({
+          icon: 'error',
+          title: 'Lỗi!',
+          text: 'Có lỗi xảy ra khi xóa phòng.'
+        });
       }
     }
   };
@@ -168,7 +228,7 @@ export default function RoomManager() {
             <input type="text" placeholder="Hướng nhìn phòng" value={typeForm.roomView} onChange={e => setTypeForm({ ...typeForm, roomView: e.target.value })} style={{ padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }} />
             <input type="text" placeholder="Tiện ích phòng" value={typeForm.amenities} onChange={e => setTypeForm({ ...typeForm, amenities: e.target.value })} style={{ padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }} />
             <input type="text" placeholder="Đường dẫn ảnh phòng (URL)" value={typeForm.imageUrl} onChange={e => setTypeForm({ ...typeForm, imageUrl: e.target.value })} style={{ padding: '8px', borderRadius: '5px', border: '1px solid #ccc' }} />
-            
+
             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
               <input type="checkbox" checked={typeForm.hasBathtub} onChange={e => setTypeForm({ ...typeForm, hasBathtub: e.target.checked })} />
               Có bồn tắm nằm

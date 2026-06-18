@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function BookingManager() {
   const { hotelId } = useParams();
@@ -72,12 +73,23 @@ export default function BookingManager() {
   const handleUpdateStatus = async (bookingId, newStatus) => {
     try {
       await axios.put(`${API_BASE_URL}/Bookings/${bookingId}`, { status: newStatus });
-      alert("Cập nhật trạng thái đơn thành công!");
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công!',
+        text: 'Cập nhập trạng thái đơn thành công.',
+        timer: 1500, // Tự động tắt sau 1.5 giây
+        showConfirmButton: false // Ẩn nút OK cho mượt
+      });
       fetchBookings();
       fetchStatistics(); // Tải lại cả bảng thống kê vì trạng thái đơn đã đổi
     } catch (error) {
       console.error(error);
-      alert("Không thể cập nhật trạng thái đơn.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại!',
+        text: 'Không thể cập nhập trạng thái đơn.',
+        confirmButtonColor: '#e74c3c'
+      })
     }
   };
 
@@ -97,7 +109,7 @@ export default function BookingManager() {
 
   return (
     <div style={{ padding: '40px 20px', maxWidth: '1200px', margin: '0 auto' }}>
-      
+
       {/* Tiêu đề trang */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
         <h1 style={{ color: 'var(--neon-blue, #00a8ff)', margin: 0 }}>📅 Quản lý Đặt Phòng & Báo Cáo</h1>
@@ -111,17 +123,17 @@ export default function BookingManager() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px', marginBottom: '20px' }}>
           <h3 style={{ margin: 0, color: '#333' }}>📊 Thống kê hiệu suất theo khoảng thời gian</h3>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <input 
-              type="date" 
-              value={statsDates.startDate} 
-              onChange={e => setStatsDates({...statsDates, startDate: e.target.value})}
+            <input
+              type="date"
+              value={statsDates.startDate}
+              onChange={e => setStatsDates({ ...statsDates, startDate: e.target.value })}
               style={{ padding: '8px', borderRadius: '6px', border: '1px solid #cbd5e1' }}
             />
             <span style={{ color: '#64748b' }}>đến</span>
-            <input 
-              type="date" 
-              value={statsDates.endDate} 
-              onChange={e => setStatsDates({...statsDates, endDate: e.target.value})}
+            <input
+              type="date"
+              value={statsDates.endDate}
+              onChange={e => setStatsDates({ ...statsDates, endDate: e.target.value })}
               style={{ padding: '8px', borderRadius: '6px', border: '1px solid #cbd5e1' }}
             />
           </div>
@@ -133,7 +145,7 @@ export default function BookingManager() {
             <p style={{ margin: '0 0 5px 0', color: '#2b6cb0', fontWeight: '600' }}>Tổng Đơn Đặt</p>
             <h2 style={{ margin: 0, color: '#2b6cb0', fontSize: '28px' }}>{stats.totalBookings} đơn</h2>
           </div>
-          
+
           <div style={{ background: '#f0fff4', padding: '20px', borderRadius: '10px', borderLeft: '5px solid #38a169' }}>
             <p style={{ margin: '0 0 5px 0', color: '#2f855a', fontWeight: '600' }}>Doanh Thu Dự Kiến</p>
             <h2 style={{ margin: 0, color: '#2f855a', fontSize: '24px' }}>{stats.totalRevenue?.toLocaleString()} VNĐ</h2>
@@ -154,20 +166,20 @@ export default function BookingManager() {
       {/* THANH BỘ LỌC & TÌM KIẾM DANH SÁCH */}
       <div style={{ background: '#f8fafc', padding: '20px', borderRadius: '12px', marginBottom: '25px', display: 'flex', flexWrap: 'wrap', gap: '15px', alignItems: 'center', justifyContent: 'space-between' }}>
         <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '10px', flex: 1, minWidth: '300px' }}>
-          <input 
-            type="text" 
+          <input
+            type="text"
             placeholder="Tìm theo tên khách hàng..."
             value={filters.searchName}
-            onChange={e => setFilters({...filters, searchName: e.target.value})}
+            onChange={e => setFilters({ ...filters, searchName: e.target.value })}
             style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', flex: 1 }}
           />
           <button type="submit" style={{ padding: '8px 16px', background: 'var(--neon-blue, #00a8ff)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>Tìm kiếm</button>
         </form>
 
         <div style={{ display: 'flex', gap: '15px' }}>
-          <select 
-            value={filters.status} 
-            onChange={e => { setFilters({...filters, status: e.target.value}); setPagination(prev => ({...prev, page: 1})); }}
+          <select
+            value={filters.status}
+            onChange={e => { setFilters({ ...filters, status: e.target.value }); setPagination(prev => ({ ...prev, page: 1 })); }}
             style={{ padding: '8px', borderRadius: '6px', border: '1px solid #cbd5e1' }}
           >
             <option value="">-- Tất cả trạng thái --</option>
@@ -177,8 +189,8 @@ export default function BookingManager() {
             <option value="Cancelled">Đã hủy</option>
           </select>
 
-          <select 
-            value={`${sortOptions.sortBy}-${sortOptions.sortOrder}`} 
+          <select
+            value={`${sortOptions.sortBy}-${sortOptions.sortOrder}`}
             onChange={e => {
               const [field, order] = e.target.value.split('-');
               setSortOptions({ sortBy: field, sortOrder: order });
@@ -256,8 +268,8 @@ export default function BookingManager() {
       {/* ĐIỀU HƯỚNG PHÂN TRANG */}
       {pagination.totalPages > 1 && (
         <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '25px' }}>
-          <button 
-            onClick={() => setPagination({...pagination, page: pagination.page - 1})}
+          <button
+            onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
             disabled={pagination.page === 1}
             style={{ padding: '8px 14px', borderRadius: '6px', border: '1px solid #cbd5e1', background: pagination.page === 1 ? '#e2e8f0' : 'white', cursor: pagination.page === 1 ? 'not-allowed' : 'pointer' }}
           >
@@ -266,8 +278,8 @@ export default function BookingManager() {
           <span style={{ padding: '8px 14px', background: 'var(--neon-blue, #00a8ff)', color: 'white', borderRadius: '6px', fontWeight: 'bold' }}>
             Trang {pagination.page} / {pagination.totalPages}
           </span>
-          <button 
-            onClick={() => setPagination({...pagination, page: pagination.page + 1})}
+          <button
+            onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
             disabled={pagination.page === pagination.totalPages}
             style={{ padding: '8px 14px', borderRadius: '6px', border: '1px solid #cbd5e1', background: pagination.page === pagination.totalPages ? '#e2e8f0' : 'white', cursor: pagination.page === pagination.totalPages ? 'not-allowed' : 'pointer' }}
           >

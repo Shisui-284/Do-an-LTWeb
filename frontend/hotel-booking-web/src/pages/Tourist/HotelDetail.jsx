@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import BookingModal from "../../components/BookingModal";
-
+import Swal from "sweetalert2"
 export default function HotelDetail() {
   const { id } = useParams();
   const [hotel, setHotel] = useState(null);
@@ -103,7 +103,18 @@ export default function HotelDetail() {
       
       await axios.post(`${API_BASE_URL}/Bookings`, bookingData, config);
       
-      alert(`🎉 Đặt phòng thành công!\n- Số đêm: ${numberOfNights}\n- Tổng tiền: ${finalTotalPrice.toLocaleString()} VNĐ`);
+      Swal.fire({
+  icon: 'success',
+  title: '🎉 Đặt phòng thành công!',
+  html: `
+    <div style="font-size: 16px; text-align: left; margin-top: 10px;">
+      <p><b>Số đêm lưu trú:</b> ${numberOfNights} đêm</p>
+      <p><b>Tổng thanh toán:</b> <span style="color: #e74c3c; font-weight: bold; font-size: 18px;">${finalTotalPrice.toLocaleString()} VNĐ</span></p>
+    </div>
+  `,
+  confirmButtonText: 'Tuyệt vời',
+  confirmButtonColor: '#27ae60'
+});
       setIsModalOpen(false);
     } catch (error) {
       console.error(error);

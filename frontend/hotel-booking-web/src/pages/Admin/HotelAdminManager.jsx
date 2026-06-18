@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function HotelAdminManager() {
   const [hotels, setHotels] = useState([]);
@@ -66,29 +67,65 @@ export default function HotelAdminManager() {
 
       if (isEditing) {
         await axios.put(`${API_BASE_URL}/Hotels/${hotelForm.id}`, payload);
-        alert("Cập nhật Khách sạn thành công!");
+        Swal.fire({
+  icon: 'success',
+  title: 'Thành công!',
+  text: 'Khách sạn đã được cập nhật.',
+  timer: 1500, // Tự động tắt sau 1.5 giây
+  showConfirmButton: false // Ẩn nút OK cho mượt
+});
       } else {
         await axios.post(`${API_BASE_URL}/Hotels`, payload);
-        alert("Thêm Khách sạn thành công!");
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành công!',
+          text: 'Khách sạn đã được thêm mới.',
+          timer: 1500,
+          showConfirmButton: false
+        });
       }
       setHotelForm({ id: null, name: "", city: "", address: "", description: "", managerId: "" });
       setIsEditing(false);
       fetchHotels();
     } catch (error) {
       console.error(error);
-      alert("Có lỗi xảy ra khi lưu Khách sạn!");
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại!',
+        text: "Có lỗi xảy ra khi lưu Khách sạn!",
+        confirmButtonColor: '#e74c3c'
+      });
     }
   };
 
   const deleteHotel = async (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa khách sạn này? Điều này sẽ xóa toàn bộ phòng và đơn đặt phòng liên quan.")) {
-      try {
-        await axios.delete(`${API_BASE_URL}/Hotels/${id}`);
-        fetchHotels();
-      } catch (error) {
-        alert("Lỗi khi xóa khách sạn!");
+    Swal.fire({
+      title: 'Bạn có chắc chắn?',
+      text: "Hành động này sẽ xóa vĩnh viễn dữ liệu và không thể hoàn tác!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e74c3c', // Màu đỏ cho nút Xóa
+      cancelButtonColor: '#95a5a6',  // Màu xám cho nút Hủy
+      confirmButtonText: 'Xác nhận xóa',
+      cancelButtonText: 'Hủy bỏ'
+    }).then(async (result) => {
+      // 2. Nếu người dùng bấm nút " Xóa "
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`${API_BASE_URL}/Hotels/${id}`);
+
+          // Thông báo xóa thành công
+          Swal.fire('Đã xóa!', 'Dữ liệu đã được dọn sạch.', 'success');
+
+          // Gọi lại hàm tải danh sách
+          fetchHotels();
+          setSelectedHotel(null);
+          setRooms([]);
+        } catch (error) {
+          Swal.fire('Lỗi!', 'Không thể xóa do dữ liệu đang bị ràng buộc.', 'error');
+        }
       }
-    }
+    });
   };
 
   return (

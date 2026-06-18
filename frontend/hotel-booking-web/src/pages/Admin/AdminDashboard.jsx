@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import Swal from "sweetalert2";
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  
+
   // State quản lý form đổi mật khẩu
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [passwordForm, setPasswordForm] = useState({ oldPassword: "", newPassword: "" });
@@ -18,7 +18,12 @@ export default function AdminDashboard() {
     }
     const parsedUser = JSON.parse(storedUser);
     if (parsedUser.role !== "Admin") {
-      alert("Chỉ Admin mới có quyền truy cập trang này!");
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại!',
+        text: 'Bạn không có quyền truy cập vào trang này.',
+        confirmButtonColor: '#e74c3c'
+      });
       navigate("/");
       return;
     }
@@ -33,20 +38,31 @@ export default function AdminDashboard() {
         oldPassword: passwordForm.oldPassword,
         newPassword: passwordForm.newPassword
       });
-      alert("Đổi mật khẩu thành công!");
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công!',
+        text: 'Mật khẩu đã được đổi thành công.',
+        timer: 1500, // Tự động tắt sau 1.5 giây
+        showConfirmButton: false // Ẩn nút OK cho mượt
+      });
       setPasswordForm({ oldPassword: "", newPassword: "" });
       setShowPasswordForm(false);
     } catch (error) {
-      alert(error.response?.data?.message || "Lỗi khi đổi mật khẩu.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại!',
+        text: error.response?.data?.message || "Lỗi khi đổi mật khẩu.",
+        confirmButtonColor: '#e74c3c'
+      });
     }
   };
 
   return (
     <div style={{ padding: '40px 20px', maxWidth: '1200px', margin: '0 auto' }}>
       <h1 style={{ marginBottom: '30px', color: '#e74c3c' }}>🛡️ Admin Dashboard</h1>
-      
+
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
-        
+
         <div style={{ border: '1px solid #eee', borderRadius: '10px', padding: '30px', textAlign: 'center', boxShadow: '0 2px 5px rgba(0,0,0,0.05)', background: '#fdfbfb' }}>
           <h2 style={{ margin: '0 0 15px 0' }}>👥 Quản lý Người Dùng</h2>
           <p style={{ color: '#555', marginBottom: '20px' }}>Xem danh sách, phân quyền, Khóa/Mở khóa tài khoản.</p>
@@ -72,8 +88,8 @@ export default function AdminDashboard() {
         <div style={{ marginTop: '30px', background: 'white', padding: '25px', borderRadius: '10px', border: '1px solid #ddd', maxWidth: '400px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
           <h3 style={{ marginTop: 0, color: '#333' }}>Đổi mật khẩu</h3>
           <form onSubmit={handleChangePassword} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <input type="password" placeholder="Mật khẩu cũ" required value={passwordForm.oldPassword} onChange={e => setPasswordForm({...passwordForm, oldPassword: e.target.value})} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }} />
-            <input type="password" placeholder="Mật khẩu mới" required value={passwordForm.newPassword} onChange={e => setPasswordForm({...passwordForm, newPassword: e.target.value})} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }} />
+            <input type="password" placeholder="Mật khẩu cũ" required value={passwordForm.oldPassword} onChange={e => setPasswordForm({ ...passwordForm, oldPassword: e.target.value })} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }} />
+            <input type="password" placeholder="Mật khẩu mới" required value={passwordForm.newPassword} onChange={e => setPasswordForm({ ...passwordForm, newPassword: e.target.value })} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }} />
             <button type="submit" style={{ padding: '10px', background: '#27ae60', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>Xác nhận đổi</button>
           </form>
         </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function ManagerDashboard() {
   const [hotels, setHotels] = useState([]);
@@ -15,10 +16,15 @@ export default function ManagerDashboard() {
       navigate("/login");
       return;
     }
-    
+
     const user = JSON.parse(storedUser);
     if (user.role !== "HotelManager" && user.role !== "Admin") {
-      alert("Bạn không có quyền truy cập trang này!");
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại!',
+        text: 'Bạn không có quyền truy cập vào trang này.',
+        confirmButtonColor: '#e74c3c'
+      });
       navigate("/");
       return;
     }
@@ -44,22 +50,22 @@ export default function ManagerDashboard() {
   return (
     <div style={{ padding: '40px 20px', maxWidth: '1200px', margin: '0 auto' }}>
       <h1 style={{ marginBottom: '30px' }}>Dashboard Quản lý Khách sạn</h1>
-      
+
       {hotels.length > 0 ? (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
           {hotels.map((hotel) => (
             <div key={hotel.id} style={{ border: '1px solid #eee', borderRadius: '10px', padding: '20px', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
               <h2 style={{ marginTop: 0 }}>{hotel.name}</h2>
               <p style={{ color: '#555' }}>📍 {hotel.city} - {hotel.address}</p>
-              
+
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
-                <Link 
+                <Link
                   to={`/manager/hotel/${hotel.id}/rooms`}
                   style={{ padding: '10px', background: 'var(--neon-blue)', color: 'white', textAlign: 'center', borderRadius: '5px', textDecoration: 'none', fontWeight: 'bold' }}
                 >
                   🚪 Quản lý Phòng & Loại phòng
                 </Link>
-                <Link 
+                <Link
                   to={`/manager/hotel/${hotel.id}/bookings`}
                   style={{ padding: '10px', background: '#27ae60', color: 'white', textAlign: 'center', borderRadius: '5px', textDecoration: 'none', fontWeight: 'bold' }}
                 >

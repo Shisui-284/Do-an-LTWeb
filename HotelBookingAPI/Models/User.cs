@@ -8,19 +8,19 @@ namespace HotelBookingAPI.Models
         public int Id { get; set; }
 
         [Required, StringLength(100)]
-        public string FullName { get; set; }
+        public string FullName { get; set; } = string.Empty;
 
         [Required, EmailAddress]
-        public string Email { get; set; } // Dùng làm tài khoản đăng nhập
+        public string Email { get; set; } = string.Empty;
 
         [Required]
-        public string PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = string.Empty; 
 
-        public string Phone { get; set; }
+        public string Phone { get; set; } = string.Empty;
 
         [Required]
-        public string Role { get; set; } // Sẽ lưu: "Admin" hoặc "HotelManager"
+        public string Role { get; set; } = string.Empty;
 
-        public bool IsActive { get; set; } = true; // Dùng để khóa/mở tài khoản thay vì xóa hẳn
+        public bool IsActive { get; set; } = true;
     }
 }

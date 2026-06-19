@@ -18,9 +18,9 @@ builder.Services.AddSwaggerGen();
 // 1.5. KÍCH HOẠT CORS (Mở cửa cho ReactJS gọi vào)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowAll",builder =>
     {
-        policy.AllowAnyOrigin()  // Cho phép mọi tên miền (localhost:5173, ...)
+        builder.AllowAnyOrigin()  // Cho phép mọi tên miền (localhost:5173, ...)
               .AllowAnyMethod()  // Cho phép mọi hành động (GET, POST, PUT, DELETE)
               .AllowAnyHeader(); // Cho phép mọi header
     });

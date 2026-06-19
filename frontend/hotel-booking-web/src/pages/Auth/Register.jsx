@@ -14,7 +14,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://dangphuongnam423-001-site1.dtempurl.com/api/auth/register", formData);
+      await axios.post("/api/auth/register", formData);
       alert("Đăng ký thành công! Vui lòng đăng nhập.");
       navigate("/login");
     } catch (err) {

@@ -15,7 +15,7 @@ export default function UserManager() {
   const [filterStatus, setFilterStatus] = useState("");
   const [allUsers, setAllUsers] = useState([]); // Store all users for client-side filtering
 
-  const API_BASE_URL = "http://dangphuongnam423-001-site1.dtempurl.com/api";
+  const API_BASE_URL = "/api";
 
   const fetchUsers = async () => {
     setLoading(true);

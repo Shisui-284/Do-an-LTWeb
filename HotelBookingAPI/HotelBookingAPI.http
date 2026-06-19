@@ -1,4 +1,4 @@
-@HotelBookingAPI_HostAddress = http://localhost:5154
+@HotelBookingAPI_HostAddress = http://dangphuongnam423-001-site1.dtempurl.com
 
 GET {{HotelBookingAPI_HostAddress}}/weatherforecast/
 Accept: application/json

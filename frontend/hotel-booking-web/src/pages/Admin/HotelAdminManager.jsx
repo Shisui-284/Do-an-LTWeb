@@ -20,7 +20,7 @@ export default function HotelAdminManager() {
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
 
-  const API_BASE_URL = "http://localhost:5154/api";
+  const API_BASE_URL = "http://dangphuongnam423-001-site1.dtempurl.com/api";
 
   const fetchHotels = async () => {
     setLoading(true);

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -33,7 +34,7 @@ export default function AdminDashboard() {
   const handleChangePassword = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5154/api/Auth/change-password", {
+      await axios.post("http://dangphuongnam423-001-site1.dtempurl.com/api/Auth/change-password", {
         userId: user.id,
         oldPassword: passwordForm.oldPassword,
         newPassword: passwordForm.newPassword

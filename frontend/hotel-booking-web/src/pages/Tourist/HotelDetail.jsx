@@ -18,7 +18,7 @@ export default function HotelDetail() {
     checkOutDate: "",
   });
 
-  const API_BASE_URL = "http://localhost:5154/api";
+  const API_BASE_URL = "http://dangphuongnam423-001-site1.dtempurl.com/api";
 
   useEffect(() => {
     const fetchHotelDetail = async () => {

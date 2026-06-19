@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "https://corsproxy.io/?http://dangphuongnam423-001-site1.dtempurl.com/api/:path*",
-      "destination": "https://corsproxy.io/?http://dangphuongnam423-001-site1.dtempurl.com/api/:path*"
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
     }
   ]
 }

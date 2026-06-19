@@ -15,7 +15,7 @@ export default function Profile() {
   const [sortOrder, setSortOrder] = useState("desc");
   const [filterStatus, setFilterStatus] = useState("");
 
-  const API_BASE_URL = "https://corsproxy.io/?http://dangphuongnam423-001-site1.dtempurl.com/api";
+  const API_BASE_URL = "/api";
 
   const fetchBookings = async () => {
     setLoading(true);

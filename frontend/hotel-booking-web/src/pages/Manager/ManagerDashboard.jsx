@@ -8,7 +8,7 @@ export default function ManagerDashboard() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const API_BASE_URL = "https://corsproxy.io/?http://dangphuongnam423-001-site1.dtempurl.com/api";
+  const API_BASE_URL = "/api";
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");

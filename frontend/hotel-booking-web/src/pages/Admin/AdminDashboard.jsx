@@ -34,7 +34,7 @@ export default function AdminDashboard() {
   const handleChangePassword = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://corsproxy.io/?http://dangphuongnam423-001-site1.dtempurl.com/api/Auth/change-password", {
+      await axios.post("/api/Auth/change-password", {
         userId: user.id,
         oldPassword: passwordForm.oldPassword,
         newPassword: passwordForm.newPassword

@@ -53,7 +53,7 @@ export default function RoomManager() {
   const [roomStats, setRoomStats] = useState([]);
   const [statsLoading, setStatsLoading] = useState(false);
 
-  const API_BASE_URL = "https://corsproxy.io/?http://dangphuongnam423-001-site1.dtempurl.com/api";
+  const API_BASE_URL = "/api";
 
   const fetchRoomTypes = async () => {
     setLoading(true);

@@ -18,7 +18,7 @@ export default function HotelDetail() {
     checkOutDate: "",
   });
 
-  const API_BASE_URL = "/api";
+  const API_BASE_URL = "https://corsproxy.io/?http://dangphuongnam423-001-site1.dtempurl.com/api";
 
   useEffect(() => {
     const fetchHotelDetail = async () => {

@@ -653,3 +653,9 @@ D:\Do-an-LTWeb\HotelBookingAPI\obj\Debug\net10.0\refint\HotelBookingAPI.dll
 D:\Do-an-LTWeb\HotelBookingAPI\obj\Debug\net10.0\HotelBookingAPI.pdb
 D:\Do-an-LTWeb\HotelBookingAPI\obj\Debug\net10.0\HotelBookingAPI.genruntimeconfig.cache
 D:\Do-an-LTWeb\HotelBookingAPI\obj\Debug\net10.0\ref\HotelBookingAPI.dll
+C:\Users\adminn\Documents\Do-an-LTWeb\HotelBookingAPI\bin\Debug\net10.0\publish\web.config
+C:\Users\adminn\Documents\Do-an-LTWeb\HotelBookingAPI\bin\Debug\net10.0\publish\appsettings.Development.json
+C:\Users\adminn\Documents\Do-an-LTWeb\HotelBookingAPI\bin\Debug\net10.0\publish\appsettings.json
+C:\Users\adminn\Documents\Do-an-LTWeb\HotelBookingAPI\bin\Debug\net10.0\publish\HotelBookingAPI.deps.json
+C:\Users\adminn\Documents\Do-an-LTWeb\HotelBookingAPI\bin\Debug\net10.0\publish\HotelBookingAPI.runtimeconfig.json
+C:\Users\adminn\Documents\Do-an-LTWeb\HotelBookingAPI\bin\Debug\net10.0\publish\HotelBookingAPI.staticwebassets.endpoints.json

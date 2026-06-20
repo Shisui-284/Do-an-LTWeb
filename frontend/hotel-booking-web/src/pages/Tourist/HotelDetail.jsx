@@ -7,7 +7,7 @@ export default function HotelDetail() {
   const { id } = useParams();
   const [hotel, setHotel] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [bookingForm, setBookingForm] = useState({
@@ -51,15 +51,31 @@ export default function HotelDetail() {
     setSelectedRoom(roomType);
     setIsModalOpen(true);
   };
-  
+
   const closeBookingModal = () => {
     setIsModalOpen(false);
     setSelectedRoom(null);
   };
+  const handlePayment = async (amount) => {
+    try {
+      // Gọi Backend để lấy link VNPAY
+      const response = await axios.post("http://dangphuongnam423-001-site1.dtempurl.com/api/Payment/create-payment-url", amount, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      // Chuyển hướng người dùng sang trang VNPAY
+      if (response.data && response.data.url) {
+        window.location.href = response.data.url;
+      }
+    } catch (err) {
+      console.error("Lỗi thanh toán:", err);
+      alert("Không thể kết nối đến VNPAY!");
+    }
+  };
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!bookingForm.checkInDate || !bookingForm.checkOutDate) {
       alert("Vui lòng chọn ngày nhận và trả phòng!");
       return;
@@ -67,7 +83,7 @@ export default function HotelDetail() {
 
     const checkIn = new Date(bookingForm.checkInDate);
     const checkOut = new Date(bookingForm.checkOutDate);
-    
+
     const timeDifference = checkOut.getTime() - checkIn.getTime();
     const numberOfNights = Math.ceil(timeDifference / (1000 * 3600 * 24));
 
@@ -79,7 +95,7 @@ export default function HotelDetail() {
     let userId = null;
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-        userId = JSON.parse(storedUser).id;
+      userId = JSON.parse(storedUser).id;
     }
 
     try {
@@ -97,24 +113,24 @@ export default function HotelDetail() {
         checkOutDate: bookingForm.checkOutDate,
         totalPrice: finalTotalPrice
       };
-      
+
       const token = localStorage.getItem("token");
       const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-      
+
       await axios.post(`${API_BASE_URL}/Bookings`, bookingData, config);
-      
+
       Swal.fire({
-  icon: 'success',
-  title: '🎉 Đặt phòng thành công!',
-  html: `
+        icon: 'success',
+        title: '🎉 Đặt phòng thành công!',
+        html: `
     <div style="font-size: 16px; text-align: left; margin-top: 10px;">
       <p><b>Số đêm lưu trú:</b> ${numberOfNights} đêm</p>
       <p><b>Tổng thanh toán:</b> <span style="color: #e74c3c; font-weight: bold; font-size: 18px;">${finalTotalPrice.toLocaleString()} VNĐ</span></p>
     </div>
   `,
-  confirmButtonText: 'Tuyệt vời',
-  confirmButtonColor: '#27ae60'
-});
+        confirmButtonText: 'Tuyệt vời',
+        confirmButtonColor: '#27ae60'
+      });
       setIsModalOpen(false);
     } catch (error) {
       console.error(error);
@@ -134,7 +150,7 @@ export default function HotelDetail() {
     <div style={{ padding: '40px 20px', maxWidth: '1200px', margin: '0 auto' }}>
       <h1 style={{ marginBottom: '10px' }}>{hotel.name}</h1>
       <p style={{ color: '#555', marginBottom: '20px' }}>📍 {hotel.city} - {hotel.address}</p>
-      
+
       <div style={{ background: '#f9f9f9', padding: '20px', borderRadius: '10px', marginBottom: '30px' }}>
         <h3>Mô tả khách sạn</h3>
         <p style={{ lineHeight: '1.6', marginTop: '10px' }}>{hotel.description || "Chưa có mô tả chi tiết."}</p>
@@ -160,7 +176,7 @@ export default function HotelDetail() {
                 <p style={{ margin: '5px 0', color: 'var(--neon-blue)', fontWeight: 'bold', fontSize: '18px' }}>
                   {rt.price ? rt.price.toLocaleString() : 0} VNĐ/đêm
                 </p>
-                <button 
+                <button
                   onClick={() => openBookingModal(rt)}
                   style={{ width: '100%', padding: '10px', background: 'var(--neon-blue)', color: 'white', border: 'none', borderRadius: '5px', marginTop: '15px', cursor: 'pointer', fontWeight: 'bold' }}
                 >

@@ -25,7 +25,7 @@ export default function BookingManager() {
     pendingBookings: 0
   });
 
-  const API_BASE_URL = "/api";
+  const API_BASE_URL = "http://dangphuongnam423-001-site1.dtempurl.com/api";
 
   // Hàm tải dữ liệu thống kê 4 thẻ dựa theo khoảng thời gian
   const fetchStatistics = async () => {

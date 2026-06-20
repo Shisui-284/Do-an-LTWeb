@@ -14,7 +14,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://corsproxy.io/?http://dangphuongnam423-001-site1.dtempurl.com/api/auth/login", formData);
+      const response = await axios.post("http://dangphuongnam423-001-site1.dtempurl.com/api/auth/login", formData);
       const { token, user } = response.data;
       
       // 1. Lưu thông tin vào bộ nhớ trình duyệt
